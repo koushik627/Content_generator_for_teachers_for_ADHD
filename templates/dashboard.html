@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <style>
+        /* Color theme */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --text-color: #333;
+        }
+        
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+        }
+        header, footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        nav {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex; /* Align cards horizontally */
+            flex-wrap: wrap; /* Wrap cards to next line if needed */
+            justify-content: space-between; /* Distribute cards evenly */
+        }
+        .card {
+            background-color: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: calc(50% - 20px); /* Make each card take 50% width with some margin */
+            box-sizing: border-box;
+            cursor: pointer; /* Change cursor to pointer */
+            transition: background-color 0.3s;  /* Positioning context for absolute position */
+            text-align: center;/* Smooth transition for background color */
+        }
+        .card:hover {
+            background-color: #75add3;
+            color: white /* Highlight color on hover */
+        }
+        .card a {
+            color: inherit; /* Inherit color from parent */
+            text-decoration: none; /* Remove underline */
+        }
+
+        form {
+            margin-top: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Make form take 100% width */
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Teacher Dashboard</h1>
+    </header>
+    <nav>
+        <a href="{{ url_for('addStudent') }}">Add Student</a> |
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <div class="container">
+        <!-- Loop through students and display each student card -->
+        {% for student in students %}
+        <div class="card">
+            <a href="{{ url_for('content', name=student.name, class_=student.class_, adhd_type=student.adhd_type, age=student.age, phone_no=student.phone_no) }}"><h2>{{ student.name }}</h2></a>
+            <p>Class: {{ student.class_ }}</p>
+            <p>ADHD Type: {{ student.adhd_type }}</p>
+            <p>Age: {{ student.age }}</p>
+            <p>Phone Number: {{ student.phone_no }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <footer>
+        <p>&copy; 2024 Teacher Dashboard. All rights reserved.</p>
+    </footer>
+</body>
+</html>

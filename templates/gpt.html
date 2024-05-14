@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <style>
+        /* Color theme */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --text-color: #333;
+        }
+        
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+        }
+        header, footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        nav {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            align-items: flex-start;
+            margin-left: 10px;
+        }
+        .details-output-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .chat-container {
+            text-align: center; /* Center content horizontally */
+            margin-top: 50px;
+            margin-left: 50px; /* Add some top margin */
+        }
+        #answer {
+            width: 50%; /* Set the width of the box */
+            margin: 20px auto; /* Center the box horizontally with some top margin */
+            padding: 20px; /* Add padding inside the box */
+            background-color: #f1f1f1; /* Set the background color */
+            border: 2px solid #ccc; /* Add border */
+            border-radius: 10px; /* Add border radius for rounded corners */
+        }
+
+        .details {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start; /* Align items to the start (left) */
+            margin-left: 20px; /* Add some margin to the left */
+        }
+
+        .student-details {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+            position: fixed; /* Make the student details box fixed */
+            top: 260px; /* Position it at the top of the viewport */
+            left: 0; /* Position it at the left of the viewport */
+            height: 40vh; /* Make it full height of the viewport */
+            overflow-y: auto; /* Add vertical scrollbar if content exceeds viewport height */
+            z-index: 1;  Ensure it appears above other content 
+            
+        }
+
+        #answer ul {
+            padding-left: 0; /* Remove default padding */
+        }
+        
+        #answer ul li {
+            padding-left:0; /* Adjust as needed */
+            text-align: left; /* Align text to the left */
+        }
+
+        .student-details p {
+            margin: 25px 0;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+            
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-left: 200px;
+            margin-right: 50px;
+            margin-bottom: 30px;
+        }
+
+    /* Adjust the width of the dropdowns as needed */
+        select {
+            width: 30%;
+            padding: 9px; /* Adjust width as needed */
+            border: 1px solid #ccc; /* Add border */
+            border-radius: 5px; /* Add border radius */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
+        }
+        input[type="text"] {
+        width: 30%; /* Adjust width as needed */
+        padding: 9px;
+        border: 1px solid #ccc; /* Add border */
+        border-radius: 5px; /* Add border radius */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
+    }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{name}}'s Dashboard</h1>
+    </header>
+    <nav>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <div class="chat-container">
+        <div class="chat-container">
+            <h1>Textual content generator</h1>
+            <form id="question-form" action="/get_answer" method="post">
+                <div class="form-row">
+                    <!-- Dropdown for text input -->
+                    <input type="text" id="text-input" name="text-input" placeholder="Enter Topic Name" required>
+                    <input type="text" id="age-input" name="age-input" placeholder="Enter Age" required>
+            
+                    <!-- Dropdown for ADHD type -->
+                    <select id="adhd-dropdown" name="adhd-dropdown" required>
+                        <option value="">Select ADHD Type</option>
+                        <option value="Inattentive">Inattentive</option>
+                        <option value="Hyperactive">Hyperactive</option>
+                        <option value="Combined">Combined</option>
+                        <!-- Add more options as needed -->
+                    </select>
+            
+                    <!-- Dropdown for emotion -->
+                    <select id="emotion-dropdown" name="emotion-dropdown" required>
+                        <option value="">Select Emotion</option>
+                        <option value="Happy">Happy</option>
+                        <option value="Sad">Sad</option>
+                        <option value="Angry">Angry</option>
+                        <option value="Fear">Fear</option>
+                        <option value="Disgust">Disgust</option>
+                        <option value="Surprise">Surprise</option>
+                        <!-- Add more options as needed -->
+                    </select>
+
+                </div>
+            
+                <!-- Submit button -->
+                <input type="submit" id="submit-btn" value="Generate">
+            </form>
+            
+            <!-- Container for student details and output -->
+            <div class="details-output-container">
+                <!-- Student details section -->
+                <div class="student-details">
+                    <h2>Student Details</h2>
+                    <p>Name: {{ name }}</p>
+                    <p>Class: {{ class_ }}</p>
+                    <p>ADHD Type: {{ adhd_type }}</p>
+                    <p>Age: {{ age }}</p>
+                    <p>Phone Number: {{ phone_no }}</p> 
+                </div>
+                <!-- Output box -->
+                <div id="answer"></div>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <!-- Chat with ChatGPT section -->
+    <footer>
+        <p>&copy; 2024 Teacher Dashboard. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("question-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var formData = new FormData(this);
+            var question = formData.get('question-form'); // Retrieve question from FormData
+            fetch("/gpt.html/get_answer", {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                data = data.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Check if data contains points with numbers followed by periods
+        if (/\d+\.\s/.test(data)) {
+            // Split the data into points
+            var points = data.split(/\d+\.\s/).filter(Boolean); // Filter out empty strings
+            var pointsHTML = "<ul>"; // Initialize a list
+            points.forEach(point => {
+                // Add each point to the list
+                pointsHTML += "<li>" + point.trim() + "</li>";
+            });
+            pointsHTML += "</ul>"; // Close the list
+            // Display the points HTML
+            document.getElementById("answer").innerHTML = pointsHTML;
+        } else {
+            // If data doesn't contain points with numbers followed by periods, display it as a regular paragraph
+            document.getElementById("answer").innerHTML = "<p>" + data + "</p>";
+        }
+            });
+        });
+    </script>
+</body>
+</html>
